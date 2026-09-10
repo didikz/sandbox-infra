@@ -1,15 +1,16 @@
 # Shared edge for sandbox projects.
-# Add a block per app (or use *.localhost for quick local tests).
+# TLS via Cloudflare Origin Certificate (keeps zone SSL mode Full / Full Strict).
 {
-	email {$CADDY_EMAIL:admin@localhost}
+	email {$CADDY_EMAIL:admin@didiktrisusanto.dev}
 }
 
-# Catch-all for local / default — replace with real hostnames as you add projects.
 sandbox.didiktrisusanto.dev {
+	tls /etc/caddy/certs/origin.pem /etc/caddy/certs/origin.key
 	respond "sandbox-infra caddy is up" 200
 }
 
 # Example (uncomment and point at a project container on the `sandbox` network):
-# app.localhost {
+# app.example.didiktrisusanto.dev {
+# 	tls /etc/caddy/certs/origin.pem /etc/caddy/certs/origin.key
 # 	reverse_proxy myapp:3000
 # }

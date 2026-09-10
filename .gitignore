@@ -1,3 +1,6 @@
 .env
 caddy_data/
 *.log
+caddy/certs/*.pem
+caddy/certs/*.key
+!caddy/certs/README.md

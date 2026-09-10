@@ -2,13 +2,18 @@
 
 Always-on shared stack for side projects: **Caddy** + **MySQL**.
 
+Caddy terminates TLS with a **Cloudflare Origin Certificate** so the zone can stay on **Full** / **Full (strict)**.
+
 Postgres and Redis can be added later when a project needs them.
 
 ## Start
 
+1. Put Origin cert files in `caddy/certs/` (see `caddy/certs/README.md`)
+2. Then:
+
 ```bash
-cd ~/Code/sandbox-infra
-cp .env.example .env   # if needed
+cd /opt/infra/sandbox-infra   # or ~/Code/sandbox-infra
+cp .env.example .env          # if needed
 docker compose up -d
 ```
 
@@ -30,14 +35,6 @@ networks:
     external: true
 ```
 
-Create extra DBs once infra is up:
-
-```bash
-docker compose exec mysql mysql -usandbox -psandbox -e 'CREATE DATABASE myapp;'
-```
-
-Or drop SQL into `mysql/init/` before first boot.
-
 ## Host access
 
-MySQL is also on localhost for tools outside Docker: `127.0.0.1:3306`
+MySQL on localhost: `127.0.0.1:3306`
