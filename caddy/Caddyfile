@@ -6,7 +6,7 @@
 }
 
 # Catch-all for local / default — replace with real hostnames as you add projects.
-:80 {
+sandbox.didiktrisusanto.dev {
 	respond "sandbox-infra caddy is up" 200
 }
 
