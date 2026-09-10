@@ -1,6 +1,5 @@
 # Shared edge for sandbox projects.
 # Add a block per app (or use *.localhost for quick local tests).
-
 {
 	email {$CADDY_EMAIL:admin@localhost}
 }
