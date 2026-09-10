@@ -1,0 +1,16 @@
+# Shared edge for sandbox projects.
+# Add a block per app (or use *.localhost for quick local tests).
+
+{
+	email {$CADDY_EMAIL:admin@localhost}
+}
+
+# Catch-all for local / default — replace with real hostnames as you add projects.
+:80 {
+	respond "sandbox-infra caddy is up" 200
+}
+
+# Example (uncomment and point at a project container on the `sandbox` network):
+# app.localhost {
+# 	reverse_proxy myapp:3000
+# }

@@ -1,0 +1,57 @@
+# Shared sandbox infra — keep this stack running; point side projects at it.
+# Other Compose apps join with:
+#   networks:
+#     sandbox:
+#       external: true
+#
+# Postgres / Redis: add later when a project needs them.
+
+name: sandbox-infra
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./caddy/site:/srv:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - sandbox
+
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-sandboxroot}
+      MYSQL_USER: ${MYSQL_USER:-sandbox}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-sandbox}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-sandbox}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d:ro
+    # Bound to localhost only — apps on the sandbox network use hostname `mysql`
+    ports:
+      - "127.0.0.1:3306:3306"
+    networks:
+      - sandbox
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD:-sandboxroot}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+networks:
+  sandbox:
+    name: sandbox
+
+volumes:
+  caddy_data:
+  caddy_config:
+  mysql_data:
