@@ -1,10 +1,12 @@
 # sandbox-infra
 
-Always-on shared stack for side projects: **Caddy** + **MySQL**.
+Always-on shared edge for side projects: **Caddy** (TLS + reverse proxy).
+
+MySQL is **Aiven** (managed) — not run in this Compose stack.
 
 Caddy terminates TLS with a **Cloudflare Origin Certificate** so the zone can stay on **Full** / **Full (strict)**.
 
-Postgres and Redis can be added later when a project needs them.
+Postgres / Redis can be added later if you need them on the VPS.
 
 ## Start
 
@@ -13,13 +15,14 @@ Postgres and Redis can be added later when a project needs them.
 
 ```bash
 cd /opt/infra/sandbox-infra   # or ~/Code/sandbox-infra
-cp .env.example .env          # if needed
 docker compose up -d
 ```
 
 Network name: `sandbox` (external for other Compose files).
 
 ## From another project
+
+Join the `sandbox` network for Caddy routing; point `DB_*` at your Aiven MySQL URL.
 
 ```yaml
 services:
@@ -28,13 +31,11 @@ services:
     networks:
       - sandbox
     environment:
-      DATABASE_URL: mysql://sandbox:sandbox@mysql:3306/myapp
+      DATABASE_URL: mysql://USER:PASSWORD@YOUR_AIVEN_HOST:PORT/DB?ssl-mode=REQUIRED
 
 networks:
   sandbox:
     external: true
 ```
 
-## Host access
-
-MySQL on localhost: `127.0.0.1:3306`
+Add a Caddy site block per app subdomain (`myapp.didiktrisusanto.dev` → `reverse_proxy app:PORT`).
