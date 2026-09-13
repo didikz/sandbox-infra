@@ -9,6 +9,14 @@ sandbox.didiktrisusanto.dev {
 	respond "sandbox-infra caddy is up" 200
 }
 
+sisbio-new.didiktrisusanto.dev {
+	tls /etc/caddy/certs/origin.pem /etc/caddy/certs/origin.key
+	root * /opt/apps/sisbio-new/public
+	encode zstd gzip
+	php_fastcgi unix//run/php/php8.5-fpm.sock
+	file_server
+}
+
 # Example (uncomment and point at a project container on the `sandbox` network):
 # app.example.didiktrisusanto.dev {
 # 	tls /etc/caddy/certs/origin.pem /etc/caddy/certs/origin.key

@@ -5,6 +5,7 @@
 #       external: true
 #
 # MySQL: use Aiven (managed). Postgres / Redis: add later when needed.
+# Laravel on host PHP-FPM: mount app path + /run/php into Caddy (see Caddyfile).
 
 name: sandbox-infra
 
@@ -20,6 +21,8 @@ services:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
       - ./caddy/certs:/etc/caddy/certs:ro
       - ./caddy/site:/srv:ro
+      - /opt/apps/sisbio-new:/opt/apps/sisbio-new:ro
+      - /run/php:/run/php
       - caddy_data:/data
       - caddy_config:/config
     networks:
